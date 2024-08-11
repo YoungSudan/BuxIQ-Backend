@@ -47,3 +47,12 @@ group :development do
   gem "error_highlight", ">= 0.4.0", platforms: [:ruby]
 end
 
+gem 'byebug'
+gem 'devise'
+gem 'devise-jwt'
+gem 'annotate'
+gem 'plaid', '~> 24.3'
+gem "maintenance_tasks", "~> 2.4"
+gem 'coffee-rails'
+gem 'rack-cors'
+gem 'jsonapi-serializer'

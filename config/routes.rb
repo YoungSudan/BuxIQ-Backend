@@ -20,8 +20,10 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
-      post 'auth/sign_in', to: 'auth#create'
-      delete 'auth/sign_out', to: 'auth#destroy'
+      resources :accounts
+      resources :catrgories
+      resources :transactions
+      resources :budgets
     end
   end
 end

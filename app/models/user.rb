@@ -20,4 +20,15 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable,
          :jwt_authenticatable, jwt_revocation_strategy: self
+  has_many :transactions
+  has_many :accounts
+
+
+  def total_expense_amount
+  end
+
+  def total_transaction_amount
+    transactions.sum(:amount)
+  end
+  
 end

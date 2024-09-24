@@ -26,6 +26,7 @@ Rails.application.routes.draw do
       resources :transactions
       resources :budgets
       get '/me' => "me#index"
+      get '/me/balances' => "me#balances"
     end
   end
 

@@ -13,5 +13,4 @@
 #
 class Category < ApplicationRecord
     validates :sub_category, uniqueness: true
-
 end

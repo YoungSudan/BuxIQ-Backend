@@ -48,14 +48,6 @@ class User < ApplicationRecord
     SQL
     
     results = Transaction.find_by_sql(query)
-    
-    # Iterate over the results and display the data
-    # results.each do |result|
-    #   puts "Month: #{result.month}"
-    #   puts "Transaction Count: #{result.transaction_count}"
-    #   puts "Total Amount: #{result.total_amount}"
-    # end
-
     formatted_results = results.map do |month|
       {
         "name": month.month&.strftime('%B') || "No Date",

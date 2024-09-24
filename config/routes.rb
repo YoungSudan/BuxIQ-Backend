@@ -18,12 +18,18 @@ Rails.application.routes.draw do
     registrations: 'users/registrations'
   }
 
+  #API routes
   namespace :api do
     namespace :v1 do
       resources :accounts
       resources :catrgories
       resources :transactions
       resources :budgets
+      get '/me' => "me#index"
     end
   end
+
+  #Plaid routes
+  get "/plaid/create_link_token" => "plaid#create_link_token"
+  post "/plaid/exchange_public_token" => "plaid#exchange_public_token"
 end

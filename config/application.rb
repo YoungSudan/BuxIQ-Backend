@@ -21,6 +21,7 @@ Bundler.require(*Rails.groups)
 module BuxIqBackend
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
+    config.autoload_paths += %W("#{config.root}/app/services")
     config.load_defaults 7.1
 
     # Please, add to the `ignore` list any other `lib` subdirectories that do

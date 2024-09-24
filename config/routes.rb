@@ -27,6 +27,7 @@ Rails.application.routes.draw do
       resources :budgets
       get '/me' => "me#index"
       get '/me/balances' => "me#balances"
+      get '/me/monthly' => "me#monthly"
     end
   end
 

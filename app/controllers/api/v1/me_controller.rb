@@ -24,6 +24,10 @@ class Api::V1::MeController < ApplicationController
       },status: :ok
     end
 
+    def monthly
+      render json: current_user.monthly_spending, status: :ok
+    end
+
     private
 
     def user

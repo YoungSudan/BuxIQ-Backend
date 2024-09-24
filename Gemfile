@@ -57,3 +57,6 @@ gem "maintenance_tasks", "~> 2.4"
 gem 'coffee-rails'
 gem 'rack-cors'
 gem 'jsonapi-serializer'
+
+gem "faker", "~> 3.4"
+gem "groupdate"

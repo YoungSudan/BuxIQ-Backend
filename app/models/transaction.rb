@@ -25,6 +25,7 @@
 #  updated_at                         :datetime         not null
 #  user_id                            :bigint           not null
 #
+
 class Transaction < ApplicationRecord
     belongs_to :user
     validates :transaction_id, uniqueness: true

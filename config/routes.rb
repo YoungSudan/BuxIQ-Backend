@@ -22,12 +22,16 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       resources :accounts
-      resources :catrgories
       resources :transactions
       resources :budgets
       get '/me' => "me#index"
       get '/me/balances' => "me#balances"
       get '/me/monthly' => "me#monthly"
+
+      # Route for fetching a single category by ID
+      get 'categories/:id', to: 'categories#show', as: 'api_v1_category'
+      get 'categories/', to: 'categories#index', as: 'api_v1_categories'
+
     end
   end
 

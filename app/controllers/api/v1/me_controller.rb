@@ -27,16 +27,4 @@ class Api::V1::MeController < ApplicationController
     def monthly
       render json: current_user.monthly_spending, status: :ok
     end
-
-    private
-
-    def user
-        if request.headers['Authorization'].present?
-          jwt_payload = JWT.decode(request.headers['Authorization'].split(' ').last, Rails.application.credentials.devise[:jwt_secret_key])
-          u = User.find(jwt_payload[0]['sub'].to_i)
-        else
-          @u = nil
-        end
-        u
-    end
 end

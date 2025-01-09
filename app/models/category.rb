@@ -12,5 +12,6 @@
 #  updated_at        :datetime         not null
 #
 class Category < ApplicationRecord
+    has_many :transactions, foreign_key: 'category_id', primary_key: 'id'
     validates :sub_category, uniqueness: true
 end

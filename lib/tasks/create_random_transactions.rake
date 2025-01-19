@@ -12,7 +12,7 @@ namespace :plaid do
         transaction_id: Faker::Alphanumeric.alphanumeric(number: 10),
         transaction_code: Faker::Alphanumeric.alphanumeric(number: 10),
         transaction_type: Faker::Commerce.department,
-        account_id: Faker::Alphanumeric.alphanumeric(number: 10),
+        account_id: 'zWynmGGqoquZmJNy5N4ZcGQQLrPBMnHwQ1QRo',
         amount: Faker::Commerce.price(range: 1.0..1000.0, as_string: true),
         currency_code: Faker::Currency.code,
         name: Faker::Commerce.product_name,
@@ -27,7 +27,7 @@ namespace :plaid do
         personal_finance_category_icon_url: Faker::Avatar.image,
         authorized_date: random_date,
         authorized_datetime: random_datetime,
-        user_id: User.first.id
+        user_id: 1
       )
       puts "Creating transactions: #{t.id}...\n"
     end

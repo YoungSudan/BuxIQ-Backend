@@ -34,26 +34,30 @@ class User < ApplicationRecord
   def monthly_spending
     query = <<-SQL
       SELECT
-        DATE_TRUNC('month', authorized_date) AS month,
-        COUNT(*) AS transaction_count,
-        SUM(amount) AS total_amount
+          DATE_TRUNC('month', authorized_datetime) AS month,
+          COUNT(*) AS transaction_count,
+          SUM(amount) AS total_amount
       FROM
-        transactions
+          transactions
       WHERE 
-        user_id = #{4}
+          user_id = #{id}
+          AND DATE_TRUNC('year', authorized_datetime) = '2024-01-01'
       GROUP BY
-        DATE_TRUNC('month', authorized_date)
+          month
+      HAVING
+          COUNT(*) > 1
       ORDER BY
-        month;
+        month
     SQL
     
     results = Transaction.find_by_sql(query)
     formatted_results = results.map do |month|
       {
-        "name": month.month&.strftime('%B') || "No Date",
+        "month": month.month&.strftime('%B') || "No Date",
         "total": month.total_amount,
-        #"transaction_count": month.transaction_count,
+        "transaction_count": month.transaction_count,
       }
     end
+    return formatted_results
   end
 end

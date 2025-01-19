@@ -23,26 +23,21 @@ class PlaidController < ApplicationController
     end 
 
     def exchange_public_token 
-        
-        request = Plaid::ItemPublicTokenExchangeRequest.new(
-            {
-              public_token: params[:data][:public_token]
-            }
-          )
-          response = client.item_public_token_exchange(request)
-          
-          # These values should be saved to a persistent database and
-          # associated with the currently signed-in user
-          access_token = response.access_token
-          item_id = response.item_id
-        
-          #user.update!(plaid_token:access_token, plaid_item_id: item_id)
+      request = Plaid::ItemPublicTokenExchangeRequest.new({
+        public_token: params[:data][:public_token]
+      })
+      response = client.item_public_token_exchange(request)
 
-          user.update!(plaid_token:access_token)
-          PullTransactionsJob.perform_now(user)
-          PullAccountsJob.perform_now(user)
-          
-          head :ok
+      # These values should be saved to a persistent database and
+      # associated with the currently signed-in user
+      access_token = response.access_token
+
+      user.update!(plaid_token:access_token)
+      
+      PullTransactionsJob.perform_now(user)
+      PullAccountsJob.perform_now(user)
+      
+      head :ok
     end
 
     def redirect

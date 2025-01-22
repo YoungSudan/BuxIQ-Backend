@@ -24,18 +24,17 @@ class PlaidController < ApplicationController
 
     def exchange_public_token 
       request = Plaid::ItemPublicTokenExchangeRequest.new({
-        public_token: params[:data][:public_token]
+        public_token: params[:public_token]
       })
       response = client.item_public_token_exchange(request)
 
       # These values should be saved to a persistent database and
       # associated with the currently signed-in user
       access_token = response.access_token
-
-      user.update!(plaid_token:access_token)
+      current_user.update!(plaid_token:access_token)
       
-      PullTransactionsJob.perform_now(user)
-      PullAccountsJob.perform_now(user)
+      PullAccountsJob.perform_now(current_user)
+      PullTransactionsJob.perform_now(current_user)
       
       head :ok
     end
@@ -50,15 +49,5 @@ class PlaidController < ApplicationController
     
     def client 
         PlaidService.new.client
-    end
-
-    def user
-        if params['headers']['Authorization'].split[1].present?
-          jwt_payload = JWT.decode(params['headers']['Authorization'].split[1], Rails.application.credentials.devise[:jwt_secret_key])
-          u = User.find(jwt_payload[0]['sub'].to_i)
-        else
-          @u = nil
-        end
-        u
     end
 end

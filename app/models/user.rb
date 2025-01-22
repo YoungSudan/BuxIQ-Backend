@@ -5,14 +5,15 @@
 #  id                     :bigint           not null, primary key
 #  email                  :string           default(""), not null
 #  encrypted_password     :string           default(""), not null
+#  first_name             :string
+#  second_name            :string
 #  reset_password_token   :string
 #  reset_password_sent_at :datetime
 #  remember_created_at    :datetime
+#  plaid_token            :string           default(""), not null
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
-#  name                   :string
 #  jti                    :string
-#  plaid_token            :string
 #
 class User < ApplicationRecord
   include Devise::JWT::RevocationStrategies::JTIMatcher
@@ -21,43 +22,56 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable,
          :jwt_authenticatable, jwt_revocation_strategy: self
-  has_many :transactions
   has_many :accounts
+  has_many :transactions, through: :accounts
+  
 
   def total_expense_amount
+    transactions.expenses.sum(:amount)
   end
 
   def total_transaction_amount
     transactions.sum(:amount)
   end
 
-  def monthly_spending
-    query = <<-SQL
-      SELECT
-          DATE_TRUNC('month', authorized_datetime) AS month,
-          COUNT(*) AS transaction_count,
-          SUM(amount) AS total_amount
-      FROM
-          transactions
-      WHERE 
-          user_id = #{id}
-          AND DATE_TRUNC('year', authorized_datetime) = '2024-01-01'
-      GROUP BY
-          month
-      HAVING
-          COUNT(*) > 1
-      ORDER BY
-        month
-    SQL
-    
-    results = Transaction.find_by_sql(query)
-    formatted_results = results.map do |month|
-      {
-        "month": month.month&.strftime('%B') || "No Date",
-        "total": month.total_amount,
-        "transaction_count": month.transaction_count,
-      }
-    end
-    return formatted_results
+  def monthly_spending(month: 1)
+    transactions
+      .where(month: month)
+      .group(:category)
+      .sum(:amount)
+      .transform_keys(&:to_s)
+  end
+
+  def balances(month: 1)      
+    balances = accounts
+      .group(:account_type)
+      .sum(:current)
+      .transform_keys(&:to_sym)
+
+    cash = balances[:depository] || 0
+    debt = balances[:credit] || 0 
+    loans = balances[:loan] || 0
+    investments = balances[:investment] || 0
+
+    {
+      "cash": cash, 
+      "debt": debt,
+      "loans": loans,
+      "investments": investments
+    }
+  end
+
+  def yearly_spending(year: '2024')
+    transactions.where(
+      "EXTRACT(year FROM authorized_datetime) = ?", 
+      year
+    ).group_by { |t| t.authorized_datetime.strftime('%B') }
+     .transform_values do |txns|
+        {
+          month: txns.first.authorized_datetime.strftime('%B'),
+          total: txns.sum(&:amount),
+          transaction_count: txns.count
+        }
+      end.values
   end
 end

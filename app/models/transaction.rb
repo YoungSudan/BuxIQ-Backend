@@ -6,7 +6,6 @@
 #  transaction_id                     :string
 #  transaction_code                   :string
 #  transaction_type                   :string
-#  account_id                         :string
 #  amount                             :decimal(10, 2)
 #  currency_code                      :string
 #  name                               :string
@@ -23,10 +22,27 @@
 #  authorized_datetime                :datetime
 #  created_at                         :datetime         not null
 #  updated_at                         :datetime         not null
-#  user_id                            :bigint           not null
+#  account_id                         :bigint
 #
 
 class Transaction < ApplicationRecord
-    belongs_to :user
+    belongs_to :account
+    has_one :category, through: :category_id    
     validates :transaction_id, uniqueness: true
+
+    def month_name
+        authorized_datetime.strftime("%B")
+    end
+
+    def year
+        authorized_datetime.year
+    end
+
+    def month
+        authorized_datetime.month
+    end
+
+    def category
+        category.name
+    end    
 end

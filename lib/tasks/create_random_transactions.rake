@@ -12,7 +12,7 @@ namespace :plaid do
         transaction_id: Faker::Alphanumeric.alphanumeric(number: 10),
         transaction_code: Faker::Alphanumeric.alphanumeric(number: 10),
         transaction_type: Faker::Commerce.department,
-        account_id: 'zWynmGGqoquZmJNy5N4ZcGQQLrPBMnHwQ1QRo',
+        account_id: 37,
         amount: Faker::Commerce.price(range: 1.0..1000.0, as_string: true),
         currency_code: Faker::Currency.code,
         name: Faker::Commerce.product_name,
@@ -21,13 +21,12 @@ namespace :plaid do
         logo_url: Faker::Avatar.image,
         payment_channel: nil,
         pending: Faker::Boolean.boolean,
-        category_id: Faker::Alphanumeric.alphanumeric(number: 10),
+        category_id: Category.all.sample.id,
         primary: Faker::Alphanumeric.alphanumeric(number: 10),
         detailed: Faker::Lorem.sentence,
         personal_finance_category_icon_url: Faker::Avatar.image,
         authorized_date: random_date,
         authorized_datetime: random_datetime,
-        user_id: 1
       )
       puts "Creating transactions: #{t.id}...\n"
     end

@@ -4,6 +4,7 @@ class CreateAccounts < ActiveRecord::Migration[7.1]
       t.string :account_id, null:false
       t.string :name
       t.string :official_name
+      t.references :user, null: false, foreign_key: true
 
       t.decimal :available, precision: 10, scale: 2
       t.decimal :current, precision: 10, scale: 2
@@ -11,7 +12,7 @@ class CreateAccounts < ActiveRecord::Migration[7.1]
       t.string :currency_code
 
       t.string :mask
-      t.string :subtype
+      t.string :account_type
       t.string :type
 
       t.timestamps

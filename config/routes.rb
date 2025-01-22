@@ -25,8 +25,11 @@ Rails.application.routes.draw do
       resources :transactions
       resources :budgets
       get '/me' => "me#index"
+      get '/me/accounts' => "me#accounts"
+      get '/me/transactions' => "me#transactions"
       get '/me/balances' => "me#balances"
-      get '/me/monthly' => "me#monthly"
+      get '/me/monthly_spending' => "me#monthly_spending"
+      get '/me/yearly_spending' => "me#yearly_spending"
 
       # Route for fetching a single category by ID
       get 'categories/:id', to: 'categories#show', as: 'api_v1_category'

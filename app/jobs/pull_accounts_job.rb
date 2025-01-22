@@ -26,7 +26,6 @@ class PullAccountsJob < ApplicationJob
           name: account.name,
           official_name: account.official_name,
           account_type: account.type,
-          subtype: account.subtype,
           limit: account.balances.limit
         )
         a.save!

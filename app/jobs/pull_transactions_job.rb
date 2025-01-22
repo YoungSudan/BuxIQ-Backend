@@ -24,21 +24,19 @@ class PullTransactionsJob < ApplicationJob
       transactions.each do |transaction|
         # Handle each transaction (e.g., save it to your database)
         # Example:
+        byebug
         t = Transaction.create(
-          user_id: user.id,
           name: transaction.name,
+          category_id: Category.find_by(name: transaction.personal_finance_category.primary).id,
+          account_id: Account.find_by(account_id: transaction.account_id).id,
           transaction_id: transaction.transaction_id,
           transaction_type: transaction.transaction_type,
-          
           amount: transaction.amount,
-          account_id: transaction.account_id,
-
           primary: transaction.personal_finance_category.primary,
           detailed: transaction.personal_finance_category.detailed,
-
           merchant_name: transaction.merchant_name,
           personal_finance_category_icon_url: transaction.personal_finance_category_icon_url,
-          authorized_datetime: transaction.amount,
+          authorized_datetime: transaction.authorized_datetime,
         )
 
         t.save!

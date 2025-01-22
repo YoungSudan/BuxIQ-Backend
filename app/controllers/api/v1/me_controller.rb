@@ -10,21 +10,23 @@ class Api::V1::MeController < ApplicationController
       end
     end
 
-    def balances 
-      cash = Account.where(user_id: current_user ,account_type:"depository").sum(:current)
-      debt = Account.where(user_id: current_user ,account_type:"credit").sum(:current)
-      loans = Account.where(user_id: current_user ,account_type:"loan").sum(:current)
-      investments = Account.where(user_id: current_user ,account_type:"investment").sum(:current)
-
-      render json: {
-        "cash": cash, 
-        "debt": debt,
-        "loans": loans,
-        "investments": investments
-      },status: :ok
+    def accounts
+      render json: current_user.accounts, status: :ok
     end
 
-    def monthly
-      render json: current_user.monthly_spending, status: :ok
+    def transactions
+      render json: current_user.transactions, status: :ok
+    end
+
+    def balances 
+      render json: current_user.balances, status: :ok
+    end
+
+    def monthly_spending
+      render json: current_user.monthly_spending(month: params[:month] || Time.now.month ), status: :ok
+    end
+
+    def yearly_spending
+      render json: current_user.yearly_spending(year: params[:year] || nil), status: :ok
     end
 end

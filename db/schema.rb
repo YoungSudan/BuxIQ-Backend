@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_09_24_002406) do
+ActiveRecord::Schema[7.1].define(version: 2025_01_22_081510) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -18,16 +18,16 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_24_002406) do
     t.string "account_id", null: false
     t.string "name"
     t.string "official_name"
+    t.bigint "user_id", null: false
     t.decimal "available", precision: 10, scale: 2
     t.decimal "current", precision: 10, scale: 2
     t.decimal "limit", precision: 10, scale: 2
     t.string "currency_code"
     t.string "mask"
-    t.string "subtype"
     t.string "account_type"
+    t.string "type"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "user_id", null: false
     t.index ["user_id"], name: "index_accounts_on_user_id"
   end
 
@@ -66,7 +66,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_24_002406) do
     t.string "transaction_id"
     t.string "transaction_code"
     t.string "transaction_type"
-    t.string "account_id"
     t.decimal "amount", precision: 10, scale: 2
     t.string "currency_code"
     t.string "name"
@@ -83,21 +82,22 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_24_002406) do
     t.datetime "authorized_datetime"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "user_id", null: false
-    t.index ["user_id"], name: "index_transactions_on_user_id"
+    t.bigint "account_id"
+    t.index ["account_id"], name: "index_transactions_on_account_id"
   end
 
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
+    t.string "first_name"
+    t.string "second_name"
     t.string "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
+    t.string "plaid_token", default: "", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "name"
     t.string "jti"
-    t.string "plaid_token"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["jti"], name: "index_users_on_jti"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
@@ -106,5 +106,4 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_24_002406) do
   add_foreign_key "accounts", "users"
   add_foreign_key "budgets", "categories"
   add_foreign_key "budgets", "users"
-  add_foreign_key "transactions", "users"
 end
